@@ -167,10 +167,6 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-"map <space> /
-"map <C-space> ?
-
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
 
@@ -181,7 +177,8 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 " Close the current buffer
-map <leader>bd :Bclose<cr>:tabclose<cr>gT
+map <leader>bd :Bclose<cr>
+map <leader>be :BufExplorer<cr>
 
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
@@ -194,7 +191,7 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
-map <leader>t<leader> :tabnext
+map <leader>t<leader> :tabnext<cr>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -411,7 +408,7 @@ Plug 'fxn/vim-monochrome'
 Plug 'haishanh/night-owl.vim'
 Plug 'hardselius/warlock'
 Plug 'Lokaltog/vim-monotone'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+"Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
@@ -477,42 +474,139 @@ let g:multi_cursor_quit_key            = '<Esc>'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => lightline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! StatusDiagnostic() abort
+function! StatusDiagnosticError() abort
   let info = get(b:, 'coc_diagnostic_info', {})
   if empty(info) | return '' | endif
-  let msgs = []
   if get(info, 'error', 0)
-    call add(msgs, 'Errors: ' . info['error'])
+    let count = info['error']
+    let msg = " error"
+    if count > 1
+      let msg = " errors"
+    endif
+    return (count . msg)
   endif
+  return ''
+endfunction
+
+function! StatusDiagnosticWarning() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if empty(info) | return '' | endif
   if get(info, 'warning', 0)
-    call add(msgs, 'Warnings: ' . info['warning'])
+    let count = info['warning']
+    let msg = " warning"
+    if count > 1
+      let msg = " warnings"
+    endif
+    return (count . msg)
   endif
-  return join(msgs, ' '). ' ' . get(g:, 'coc_status', '')
+  return ''
 endfunction
 
 let g:lightline = {
-      \ 'colorscheme': 'seoul256',
-      \ 'active': {
-      \   'left': [ ['mode', 'paste'],
-      \             ['fugitive', 'readonly', 'filename', 'modified'], ['cocstatus']],
-      \   'right': [ [ 'lineinfo' ], ['percent'] ]
-      \ },
-      \ 'component': {
-      \   'readonly': '%{&filetype=="help"?"":&readonly?"readonly":""}',
-      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-      \   'fugitive': '%{exists("*FugitiveHead")?FugitiveHead():""}'
-      \ },
-      \ 'component_visible_condition': {
-      \   'readonly': '(&filetype!="help"&& &readonly)',
-      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-      \   'fugitive': '(exists("*FugitiveHead") && ""!=FugitiveHead())'
-      \ },
-      \ 'component_function': {
-      \   'cocstatus': 'StatusDiagnostic',
-      \ },
-      \ 'separator': { 'left': ' ', 'right': ' ' },
-      \ 'subseparator': { 'left': ' ', 'right': ' ' }
-      \ }
+	      \ 'colorscheme': 'deus',
+	      \ 'active': {
+	      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename', 'cocerror', 'cocwarning'], ['ctrlpmark'] ],
+	      \   'right': [ [ 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
+	      \ },
+	      \ 'component_function': {
+	      \   'fugitive': 'LightlineFugitive',
+	      \   'filename': 'LightlineFilename',
+	      \   'fileformat': 'LightlineFileformat',
+	      \   'filetype': 'LightlineFiletype',
+	      \   'fileencoding': 'LightlineFileencoding',
+	      \   'mode': 'LightlineMode',
+	      \   'ctrlpmark': 'CtrlPMark',
+	      \ },
+	      \ 'component_expand': {
+	      \   'cocerror': 'StatusDiagnosticError',
+	      \   'cocwarning': 'StatusDiagnosticWarning',
+	      \ },
+	      \ 'component_type': {
+	      \   'cocerror': 'error',
+	      \   'cocwarning': 'warning',
+	      \ },
+	      \ 'subseparator': { 'left': '|', 'right': '|' }
+	      \ }
+function! LightlineModified()
+  return &ft ==# 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+function! LightlineReadonly()
+  return &ft !~? 'help' && &readonly ? 'RO' : ''
+endfunction
+function! LightlineFilename()
+  let fname = expand('%:f%:t')
+  return fname ==# 'ControlP' && has_key(g:lightline, 'ctrlp_item') ? g:lightline.ctrlp_item :
+        \ fname =~# '^__Tagbar__\|__Gundo\|NERD_tree' ? '' :
+        \ &ft ==# 'vimfiler' ? vimfiler#get_status_string() :
+        \ &ft ==# 'unite' ? unite#get_status_string() :
+        \ &ft ==# 'vimshell' ? vimshell#get_status_string() :
+        \ (LightlineReadonly() !=# '' ? LightlineReadonly() . ' ' : '') .
+        \ (fname !=# '' ? fname : '[No Name]') .
+        \ (LightlineModified() !=# '' ? ' ' . LightlineModified() : '')
+endfunction
+function! LightlineFugitive()
+  try
+    if expand('%:t') !~? 'Tagbar\|Gundo\|NERD' && &ft !~? 'vimfiler' && exists('*FugitiveHead')
+      let mark = ''  " edit here for cool mark
+      let branch = FugitiveHead()
+      return branch !=# '' ? mark.branch : ''
+    endif
+  catch
+  endtry
+  return ''
+endfunction
+function! LightlineFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+function! LightlineFiletype()
+  return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+endfunction
+function! LightlineFileencoding()
+  return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
+endfunction
+function! LightlineMode()
+  let fname = expand('%:t')
+  return fname =~# '^__Tagbar__' ? 'Tagbar' :
+        \ fname ==# 'ControlP' ? 'CtrlP' :
+        \ fname ==# '__Gundo__' ? 'Gundo' :
+        \ fname ==# '__Gundo_Preview__' ? 'Gundo Preview' :
+        \ fname =~# 'NERD_tree' ? 'NERDTree' :
+        \ &ft ==# 'unite' ? 'Unite' :
+        \ &ft ==# 'vimfiler' ? 'VimFiler' :
+        \ &ft ==# 'vimshell' ? 'VimShell' :
+        \ winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+function! CtrlPMark()
+  if expand('%:t') ==# 'ControlP' && has_key(g:lightline, 'ctrlp_item')
+    call lightline#link('iR'[g:lightline.ctrlp_regex])
+    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
+          \ , g:lightline.ctrlp_next], 0)
+  else
+    return ''
+  endif
+endfunction
+let g:ctrlp_status_func = {
+  \ 'main': 'CtrlPStatusFunc_1',
+  \ 'prog': 'CtrlPStatusFunc_2',
+  \ }
+function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
+  let g:lightline.ctrlp_regex = a:regex
+  let g:lightline.ctrlp_prev = a:prev
+  let g:lightline.ctrlp_item = a:item
+  let g:lightline.ctrlp_next = a:next
+  return lightline#statusline(0)
+endfunction
+function! CtrlPStatusFunc_2(str)
+  return lightline#statusline(0)
+endfunction
+let g:tagbar_status_func = 'TagbarStatusFunc'
+function! TagbarStatusFunc(current, sort, fname, ...) abort
+  return lightline#statusline(0)
+endfunction
+" For more information: :help syntastic-loclist-callback
+let g:unite_force_overwrite_statusline = 0
+let g:vimfiler_force_overwrite_statusline = 0
+let g:vimshell_force_overwrite_statusline = 0
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -550,16 +644,7 @@ endfunction
 
 " Always show the talilne
 set stal=2
-set tabline=%!CustomizedTabLine()b
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => vim-go
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" disable vim-go :GoDef short cut (gd)
-" this is handled by LanguageClient [LC]
-let g:go_def_mapping_enabled = 0
-let g:go_doc_keywordprg_enabled = 0
+set tabline=%!CustomizedTabLine()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -571,9 +656,6 @@ set hidden
 " Some servers have issues with backup files, see #649.
 set nobackup
 set nowritebackup
-
-" Give more space for displaying messages.
-set cmdheight=2
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
@@ -715,6 +797,11 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+" Auto import on save
+autocmd BufWritePre *.go :call CocAction('organizeImport')
+
+" Update lightline on diagnostic change
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -726,6 +813,7 @@ set termguicolors
 colorscheme monotone
 set updatetime=100
 set signcolumn=yes
+set noshowmode
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
