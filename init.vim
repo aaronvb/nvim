@@ -192,6 +192,17 @@ map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
 map <leader>t<leader> :tabnext<cr>
+map <leader>tp :tabprevious<cr>
+map <leader>t1 1gt<cr>
+map <leader>t2 2gt<cr>
+map <leader>t3 3gt<cr>
+map <leader>t4 4gt<cr>
+map <leader>t5 5gt<cr>
+map <leader>t6 6gt<cr>
+map <leader>t7 7gt<cr>
+map <leader>t8 8gt<cr>
+map <leader>t9 9gt<cr>
+map <leader>t0 10gt<cr>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -450,7 +461,7 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:NERDTreeWinPos = "left"
 let NERDTreeShowHidden=1
-let NERDTreeIgnore = ['\.pyc$', '__pycache__']
+let NERDTreeIgnore = ['\.pyc$', '__pycache__', 'node_modules', '\.git']
 let g:NERDTreeWinSize=35
 let g:NERDTreeHijackNetrw=0
 map <leader>nn :NERDTreeToggle<cr>
