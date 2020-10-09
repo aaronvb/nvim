@@ -397,10 +397,12 @@ autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 call plug#begin('~/.vim/plugged')
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'jlanzarotta/bufexplorer'
-Plug 'kien/ctrlp.vim'
+"Plug 'kien/ctrlp.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
 Plug 'tpope/vim-commentary'
@@ -437,24 +439,25 @@ map <leader>o :BufExplorer<cr>
 """"""""""""""""""""""""""""""
 " => CTRL-P
 """"""""""""""""""""""""""""""
-let g:ctrlp_working_path_mode = 0
+" let g:ctrlp_working_path_mode = 0
 
 " Quickly find and open a file in the current working directory
-map <leader>j :CtrlP<cr>
+" map <leader>j :CtrlP<cr>
 
 " Quickly find and open a buffer
-map <leader>b :CtrlPBuffer<cr>
+" map <leader>b :CtrlPBuffer<cr>
 
 " Quickly find and open a recently opened file
-map <leader>f :CtrlPMRU<CR>
+" map <leader>f :CtrlPMRU<CR>
 
-let g:ctrlp_max_height = 20
-let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git'
+" let g:ctrlp_max_height = 20
+" let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git'
 
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-endif
+" let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+" if executable('ag')
+  " let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+" endif
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Nerd Tree
@@ -823,7 +826,7 @@ autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set number
-set termguicolors
+set notermguicolors
 colorscheme monotone
 set updatetime=100
 set signcolumn=yes
@@ -840,3 +843,32 @@ autocmd Filetype javascript setlocal ts=4 sw=4 sts=0
 autocmd Filetype go setlocal ts=4 sw=4 sts=0
 autocmd Filetype python setlocal ts=4 sw=4 sts=0
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => FZF
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <C-P> :GitFiles<CR>
+" let g:fzf_layout = { 'down': '~30%' }
+
+" Customize fzf colors to match your color scheme
+" - fzf#wrap translates this to a set of `--color` options
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+" Enable per-command history
+" - History files will be stored in the specified directory
+" - When set, CTRL-N and CTRL-P will be bound to 'next-history' and
+"   'previous-history' instead of 'down' and 'up'.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
