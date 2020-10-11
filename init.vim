@@ -832,7 +832,8 @@ colorscheme monotone
 set updatetime=100
 set signcolumn=yes
 set noshowmode
-
+hi MatchParen cterm=underline ctermfg=none ctermbg=none
+set mouse=a
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Custom Indentations
