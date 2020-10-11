@@ -827,13 +827,13 @@ autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set number
-set notermguicolors
+set termguicolors
 colorscheme monotone
 set updatetime=100
 set signcolumn=yes
 set noshowmode
-hi MatchParen cterm=underline ctermfg=none ctermbg=none
 set mouse=a
+hi MatchParen cterm=underline ctermbg=none ctermfg=none gui=underline guifg=none guibg=none
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Custom Indentations
