@@ -850,7 +850,7 @@ autocmd Filetype python setlocal ts=4 sw=4 sts=0
 " => FZF
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nmap <C-P> :GitFiles<CR>
-" let g:fzf_layout = { 'down': '~30%' }
+let g:fzf_layout = { 'down': '~25%' }
 
 " Customize fzf colors to match your color scheme
 " - fzf#wrap translates this to a set of `--color` options
