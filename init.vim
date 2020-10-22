@@ -827,7 +827,7 @@ autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set number
-set termguicolors
+" set termguicolors
 colorscheme monotone
 set updatetime=100
 set signcolumn=yes
