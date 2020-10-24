@@ -406,9 +406,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'jlanzarotta/bufexplorer'
-"Plug 'kien/ctrlp.vim'
 Plug 'itchyny/lightline.vim'
-" Plug 'preservim/nerdtree'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
@@ -441,42 +439,6 @@ let g:bufExplorerShowRelativePath=1
 let g:bufExplorerFindActive=1
 let g:bufExplorerSortBy='name'
 map <leader>o :BufExplorer<cr>
-
-
-""""""""""""""""""""""""""""""
-" => CTRL-P
-""""""""""""""""""""""""""""""
-" let g:ctrlp_working_path_mode = 0
-
-" Quickly find and open a file in the current working directory
-" map <leader>j :CtrlP<cr>
-
-" Quickly find and open a buffer
-" map <leader>b :CtrlPBuffer<cr>
-
-" Quickly find and open a recently opened file
-" map <leader>f :CtrlPMRU<CR>
-
-" let g:ctrlp_max_height = 20
-" let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git'
-
-" let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-" if executable('ag')
-  " let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-" endif
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Nerd Tree
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:NERDTreeWinPos = "left"
-let NERDTreeShowHidden=1
-let NERDTreeIgnore = ['\.pyc$', '__pycache__', 'node_modules', '\.git']
-let g:NERDTreeWinSize=35
-let g:NERDTreeHijackNetrw=0
-map <leader>nn :NERDTreeToggle<cr>
-map <leader>nb :NERDTreeFromBookmark<Space>
-map <leader>nf :NERDTreeFind<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -816,6 +778,8 @@ set signcolumn=yes
 set noshowmode
 set mouse=a
 hi MatchParen cterm=underline ctermbg=none ctermfg=none gui=underline guifg=none guibg=none
+let g:netrw_fastbrowse=0
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Custom Indentations
