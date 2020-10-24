@@ -177,7 +177,7 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 " Close the current buffer
-map <leader>bc :Bclose<cr>
+map <leader>bd :Bclose<cr>
 map <leader>w :Bclose<cr>
 map <leader>be :BufExplorer<cr>
 map <leader>bn :enew<cr>
@@ -407,6 +407,7 @@ Plug 'mileszs/ack.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'itchyny/lightline.vim'
+Plug 'preservim/nerdtree'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
@@ -439,6 +440,19 @@ let g:bufExplorerShowRelativePath=1
 let g:bufExplorerFindActive=1
 let g:bufExplorerSortBy='name'
 map <leader>o :BufExplorer<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Nerd Tree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:NERDTreeWinPos = "left"
+let NERDTreeShowHidden=1
+let NERDTreeIgnore = ['\.pyc$', '__pycache__', 'node_modules', '\.git']
+let g:NERDTreeWinSize=35
+let g:NERDTreeHijackNetrw=1
+map <leader>nt :NERDTreeToggle<cr>
+map <leader>nb :NERDTreeFromBookmark<Space>
+map <leader>nf :NERDTreeFind<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
