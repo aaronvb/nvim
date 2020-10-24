@@ -18,12 +18,12 @@ au FocusGained,BufEnter * checktime
 " like <leader>w saves the current file
 let mapleader = ","
 
-" Fast saving
-nmap <leader>w :w!<cr>
-
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+
+" Show tabline
+set stal=2
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -177,8 +177,10 @@ map <C-h> <C-W>h
 map <C-l> <C-W>l
 
 " Close the current buffer
-map <leader>bd :Bclose<cr>
+map <leader>bc :Bclose<cr>
+map <leader>w :Bclose<cr>
 map <leader>be :BufExplorer<cr>
+map <leader>bn :enew<cr>
 
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
@@ -218,24 +220,26 @@ map <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers
-try
-  set switchbuf=useopen,usetab,newtab
-  set stal=2
-catch
-endtry
+" try
+"   set switchbuf=useopen,usetab,newtab
+"   set stal=2
+" catch
+" endtry
 
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
-
-""""""""""""""""""""""""""""""
-" => Status line
-""""""""""""""""""""""""""""""
-" Always show the status line
-set laststatus=2
-
-" Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+" Mapping for buffers
+nmap <Leader>1 <Plug>lightline#bufferline#go(1)
+nmap <Leader>2 <Plug>lightline#bufferline#go(2)
+nmap <Leader>3 <Plug>lightline#bufferline#go(3)
+nmap <Leader>4 <Plug>lightline#bufferline#go(4)
+nmap <Leader>5 <Plug>lightline#bufferline#go(5)
+nmap <Leader>6 <Plug>lightline#bufferline#go(6)
+nmap <Leader>7 <Plug>lightline#bufferline#go(7)
+nmap <Leader>8 <Plug>lightline#bufferline#go(8)
+nmap <Leader>9 <Plug>lightline#bufferline#go(9)
+nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -424,6 +428,8 @@ Plug 'hardselius/warlock'
 Plug 'Lokaltog/vim-monotone'
 "Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'mengelbrecht/lightline-bufferline'
+Plug 'godlygeek/tabular'
 call plug#end()
 
 
@@ -538,13 +544,19 @@ let g:lightline = {
 	      \ 'component_expand': {
 	      \   'cocerror': 'StatusDiagnosticError',
 	      \   'cocwarning': 'StatusDiagnosticWarning',
+        \   'buffers': 'lightline#bufferline#buffers',
 	      \ },
 	      \ 'component_type': {
 	      \   'cocerror': 'error',
 	      \   'cocwarning': 'warning',
+        \   'buffers': 'tabsel',
 	      \ },
-	      \ 'subseparator': { 'left': '|', 'right': '|' }
+	      \ 'subseparator': { 'left': '|', 'right': '|' },
+        \ 'tabline': {
+        \   'left': [ ['buffers'] ],
+        \   'right': [ [''] ] },
 	      \ }
+
 function! LightlineModified()
   return &ft ==# 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
@@ -625,44 +637,14 @@ endfunction
 let g:unite_force_overwrite_statusline = 0
 let g:vimfiler_force_overwrite_statusline = 0
 let g:vimshell_force_overwrite_statusline = 0
-
+let g:lightline#bufferline#show_number = 2
+let g:lightline#bufferline#unnamed = '[No Name]'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Git gutter (Git diff)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:gitgutter_enabled=1
 nnoremap <silent> <leader>d :GitGutterToggle<cr>
-
-function! CustomizedTabLine()
-    let s = ''
-    let t = tabpagenr()
-    let i = 1
-    while i <= tabpagenr('$')
-        let buflist = tabpagebuflist(i)
-        let winnr = tabpagewinnr(i)
-        let s .= '%' . i . 'T'
-        let s .= (i == t ? '%1*' : '%2*')
-        let s .= ' '
-        let s .= i . ':'
-        let s .= '%*'
-        let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
-        let file = bufname(buflist[winnr - 1])
-        let file = fnamemodify(file, ':p:t')
-        if file == ''
-            let file = '[No Name]'
-        endif
-        let s .= file
-        let s .= ' '
-        let i = i + 1
-    endwhile
-    let s .= '%T%#TabLineFill#%='
-    let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
-    return s
-endfunction
-
-" Always show the talilne
-set stal=2
-set tabline=%!CustomizedTabLine()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
