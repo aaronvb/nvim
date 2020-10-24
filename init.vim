@@ -530,7 +530,7 @@ let g:lightline = {
 	      \ 'subseparator': { 'left': '|', 'right': '|' },
         \ 'tabline': {
         \   'left': [ ['buffers'] ],
-        \   'right': [ [''] ] },
+        \   'right': [ ['tabs'] ] },
 	      \ }
 
 function! LightlineModified()
