@@ -229,19 +229,6 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 " Return to last edit position when opening files (You want this!)
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
-" Mapping for buffers
-nmap <Leader>1 <Plug>lightline#bufferline#go(1)
-nmap <Leader>2 <Plug>lightline#bufferline#go(2)
-nmap <Leader>3 <Plug>lightline#bufferline#go(3)
-nmap <Leader>4 <Plug>lightline#bufferline#go(4)
-nmap <Leader>5 <Plug>lightline#bufferline#go(5)
-nmap <Leader>6 <Plug>lightline#bufferline#go(6)
-nmap <Leader>7 <Plug>lightline#bufferline#go(7)
-nmap <Leader>8 <Plug>lightline#bufferline#go(8)
-nmap <Leader>9 <Plug>lightline#bufferline#go(9)
-nmap <Leader>0 <Plug>lightline#bufferline#go(10)
-
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -427,8 +414,8 @@ Plug 'hardselius/warlock'
 Plug 'Lokaltog/vim-monotone'
 "Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'mengelbrecht/lightline-bufferline'
 Plug 'godlygeek/tabular'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 call plug#end()
 
 
@@ -503,7 +490,7 @@ function! StatusDiagnosticWarning() abort
 endfunction
 
 let g:lightline = {
-	      \ 'colorscheme': 'deus',
+	      \ 'colorscheme': 'tokyonight',
 	      \ 'active': {
 	      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename', 'cocerror', 'cocwarning'], ['ctrlpmark'] ],
 	      \   'right': [ [ 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
@@ -520,16 +507,14 @@ let g:lightline = {
 	      \ 'component_expand': {
 	      \   'cocerror': 'StatusDiagnosticError',
 	      \   'cocwarning': 'StatusDiagnosticWarning',
-        \   'buffers': 'lightline#bufferline#buffers',
 	      \ },
 	      \ 'component_type': {
 	      \   'cocerror': 'error',
 	      \   'cocwarning': 'warning',
-        \   'buffers': 'tabsel',
 	      \ },
 	      \ 'subseparator': { 'left': '|', 'right': '|' },
         \ 'tabline': {
-        \   'left': [ ['buffers'] ],
+        \   'left': [ ['tabs'] ],
         \   'right': [ [''] ] },
 	      \ }
 
@@ -613,8 +598,6 @@ endfunction
 let g:unite_force_overwrite_statusline = 0
 let g:vimfiler_force_overwrite_statusline = 0
 let g:vimshell_force_overwrite_statusline = 0
-let g:lightline#bufferline#show_number = 2
-let g:lightline#bufferline#unnamed = '[No Name]'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Git gutter (Git diff)
@@ -785,13 +768,15 @@ autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 set number
-" set termguicolors
-colorscheme monotone
+set termguicolors
+let g:tokyonight_italic_comments = 1
+let g:tokyonight_style = "night"
+colorscheme tokyonight
 set updatetime=100
 set signcolumn=yes
 set noshowmode
 set mouse=a
-hi MatchParen cterm=underline ctermbg=none ctermfg=none gui=underline guifg=none guibg=none
+hi MatchParen cterm=underline,bold ctermbg=none ctermfg=none gui=underline,bold guifg=none guibg=none
 let g:netrw_fastbrowse=0
 
 
