@@ -786,7 +786,7 @@ let g:netrw_fastbrowse=0
 
 autocmd Filetype html setlocal ts=2 sw=2
 autocmd Filetype ruby setlocal ts=2 sw=2
-autocmd Filetype javascript setlocal ts=4 sw=4 sts=0
+autocmd Filetype javascript setlocal ts=2 sw=2
 autocmd Filetype go setlocal ts=4 sw=4 sts=0
 autocmd Filetype python setlocal ts=4 sw=4 sts=0
 
