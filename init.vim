@@ -794,6 +794,7 @@ autocmd Filetype python setlocal ts=4 sw=4 sts=0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => FZF
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 nmap <C-P> :GitFiles<CR>
 let g:fzf_layout = { 'down': '~25%' }
 
@@ -819,3 +820,12 @@ let g:fzf_colors =
 " - When set, CTRL-N and CTRL-P will be bound to 'next-history' and
 "   'previous-history' instead of 'down' and 'up'.
 let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Custom Filetypes
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+augroup filetype_jsx
+    autocmd!
+    autocmd FileType javascript set filetype=javascriptreact
+augroup END
