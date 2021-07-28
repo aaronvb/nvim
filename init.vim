@@ -416,6 +416,7 @@ Plug 'Lokaltog/vim-monotone'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'godlygeek/tabular'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 call plug#end()
 
 
@@ -829,3 +830,12 @@ augroup filetype_jsx
     autocmd!
     autocmd FileType javascript set filetype=javascriptreact
 augroup END
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Custom Prettier to match vscode
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:prettier#config#print_width = 80
+let g:prettier#config#tab_width = 2
+let g:prettier#config#use_tabs = false
+let g:prettier#config#parser = 'babel'
