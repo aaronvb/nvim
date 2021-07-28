@@ -620,15 +620,6 @@ set nowritebackup
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
 
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
-
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
@@ -729,10 +720,10 @@ xmap <silent> <C-s> <Plug>(coc-range-select)
 command! -nargs=0 Format :call CocAction('format')
 
 " Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
 " Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+command! -nargs=0 OR :silent call CocAction('runCommand', 'editor.action.organizeImport')
 
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
@@ -758,7 +749,7 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 " Auto import on save
-autocmd BufWritePre *.go :call CocAction('organizeImport')
+autocmd BufWritePre *.go :silent call CocAction('organizeImport')
 
 " Update lightline on diagnostic change
 autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
@@ -774,7 +765,7 @@ let g:tokyonight_italic_comments = 1
 let g:tokyonight_style = "night"
 colorscheme tokyonight
 set updatetime=100
-set signcolumn=yes
+set signcolumn=number
 set noshowmode
 set mouse=a
 hi MatchParen cterm=underline,bold ctermbg=none ctermfg=none gui=underline,bold guifg=none guibg=none
@@ -837,5 +828,5 @@ augroup END
 
 let g:prettier#config#print_width = 80
 let g:prettier#config#tab_width = 2
-let g:prettier#config#use_tabs = false
+let g:prettier#config#use_tabs = 'false'
 let g:prettier#config#parser = 'babel'
