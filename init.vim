@@ -417,6 +417,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'godlygeek/tabular'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'kchmck/vim-coffee-script'
 call plug#end()
 
 
